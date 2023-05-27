@@ -1,0 +1,109 @@
+body {
+    background-color: rgb(139, 189, 238);
+    font-family: system-ui;
+}
+
+#title {
+    font-family: system-ui;
+    font-size: larger;
+    color: rgb(26, 82, 138);
+    text-align: center;
+}
+
+::selection {
+    background: rgb(172, 212, 253);
+}
+
+input::placeholder {
+    color: rgb(40, 105, 170);
+}
+
+
+.inputBox input:focus {
+    outline: none;
+    border-bottom: 2px solid rgb(76, 143, 210);
+}
+
+
+
+.container {
+    width: 300px;
+    margin: 0 auto;;
+    text-align: center;
+    margin-top: 10%;
+    font-family: system-ui;
+    font-weight:500;
+    background: rgb(162, 205, 248);
+    border-radius: 15px;
+    padding-top: 5px;
+    padding-bottom: 20px;
+    border: 2px solid rgb(76, 143, 210);
+}
+
+h1 {
+    color: rgb(50, 112, 192);
+}
+
+.inputBox input {
+    width: 70%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    background-color: transparent;
+    border-bottom: 1px solid rgb(76, 143, 210);
+    transition: border-bottom 0.1s ease-in-out;
+    color: rgb(50, 112, 192);
+    font-size: large;
+}
+
+.loginButton {
+    padding: 10px 20px;
+    background-color: rgb(197, 223, 250);
+    border-radius: 20px;
+    width: 36%;
+    border: none;
+    cursor: pointer;
+    color: rgb(26, 82, 138);
+    font-size: 100%;
+    font-weight:600;
+    border-bottom: 1px solid rgb(76, 143, 210);
+}
+
+.inputBox {
+    position: relative;
+    margin: 30px 0;
+    width: 310px;
+}
+
+.inputBox label {
+    color: rgb(50, 112, 192);
+    position: absolute;
+    top: 40%;
+    left: 40px;
+    transform: translateY(-40%);
+    pointer-events: none;
+    transition: 0.4s;
+    font-size: 17px;
+}
+
+.inputBox input:focus ~ label,
+.inputBox input:valid ~ label {
+    top: -2px;
+    font-size: 13px;
+}
+
+.link {
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    color: rgb(34, 103, 194);
+    padding-bottom: 15px;
+    display: block;
+    margin-top: -5px;
+}
+
+
+.link:hover {
+    text-decoration: underline;
+}
