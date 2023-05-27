@@ -8,10 +8,10 @@ const APIKEY = 'cb77b17e1c5b411397f185427232505';
 
 // Create connection
 const db = mysql.createConnection({
-    host: MYSQLHOST,
-    user: MYSQLUSER,
-    password: MYSQLPASSWORD,
-    database: MYSQLDATABASE,
+    host: 'containers-us-west-120.railway.app',
+    user: 'root',
+    password: '2LHYDggZDwzPkh0CDBmi',
+    database: 'railway',
 });
 
 // Connect 
