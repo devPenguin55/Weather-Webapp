@@ -8,10 +8,10 @@ const APIKEY = 'cb77b17e1c5b411397f185427232505';
 
 // Create connection
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'sqluser',
-    password: 'password',
-    database: 'weather',
+    host: MYSQLHOST,
+    user: MYSQLUSER,
+    password: MYSQLPASSWORD,
+    database: MYSQLDATABASE,
 });
 
 // Connect 
@@ -41,7 +41,10 @@ app.get('/login', function(request, response) {
 	response.sendFile(path.join(__dirname + '/login.html'));
 });
 
-
+app.get('/', function(request, response) {
+ 	// Render login template
+ 	response.redirect('/login');
+});
 
 app.post('/auth', function(request, response) {
 	// Capture the input fields
