@@ -97,11 +97,28 @@ app.get('/create', function(request, response) {
     if (request.session.loggedin) {
         console.log("create page entered")
         response.send(`
-        <h1>Create Location</h1>
-        <form method="POST" action="/createplace">
-          <input type="text" name="place" placeholder="Enter Place">
-          <button type="submit">Create</button>
-        </form>
+        <html>
+          <body style="background-color: rgb(162, 205, 248);">
+            <h1 style="text-align:center; color: rgb(50, 112, 192); font-family: system-ui;">Create Location</h1>
+            <div style="display: flex; justify-content: center; align-items: center; height: 100px;">
+            <style>
+              input[type="text"]::placeholder {
+                color: rgb(50, 112, 192);
+              }
+
+              input:focus {
+                outline: none;
+                border-color: initial;
+                box-shadow: none;
+              }
+            </style>
+            <form method="POST" action="/createplace">
+              <input type="text" name="place" placeholder="Enter Place" style="background-color: transparent; border: none; border-bottom: 1px solid rgb(50, 112, 192); font-family: system-ui; color: rgb(50, 112, 192);" />
+              <button type="submit" style="border: none; color: rgb(50, 112, 192); background-color: transparent; font-family: system-ui;">Create</button>
+            </form>
+          </div>
+          </body>
+        </html>
       `);
         
     } else {
@@ -113,11 +130,28 @@ app.get('/delete', function(request, response) {
     if (request.session.loggedin) {
         console.log("delete page entered")
         response.send(`
-        <h1>Delete Location</h1>
-        <form method="POST" action="/deleteplace">
-          <input type="text" name="place" placeholder="Enter Place">
-          <button type="submit">Delete</button>
-        </form>
+        <html>
+        <body style="background-color: rgb(162, 205, 248);">
+          <h1 style="text-align:center; color: rgb(50, 112, 192); font-family: system-ui;">Delete Location</h1>
+          <div style="display: flex; justify-content: center; align-items: center; height: 100px;">
+          <style>
+            input[type="text"]::placeholder {
+              color: rgb(50, 112, 192);
+            }
+
+            input:focus {
+              outline: none;
+              border-color: initial;
+              box-shadow: none;
+            }
+          </style>
+          <form method="POST" action="/deleteplace">
+            <input type="text" name="place" placeholder="Enter Place" style="background-color: transparent; border: none; border-bottom: 1px solid rgb(50, 112, 192); font-family: system-ui; color: rgb(50, 112, 192);" />
+            <button type="submit" style="border: none; color: rgb(50, 112, 192); background-color: transparent; font-family: system-ui;">Delete</button>
+          </form>
+        </div>
+        </body>
+      </html>
       `);
         
     } else {
@@ -150,7 +184,7 @@ app.post('/register', function(request, response) {
         if (err) {
           // If there's an error executing the query, send an error response
           console.log('Error executing query:', err);
-          message = "Error registering user";
+          message = "User already exists";
           let finalMessage = `
           <html>
               <body style="background-color: rgb(162, 205, 248);">
@@ -165,7 +199,7 @@ app.post('/register', function(request, response) {
         }
       });
     }
-  });   
+});   
 
 app.post('/createplace', function(request, response) {
     if (request.session.loggedin) {
@@ -269,7 +303,7 @@ app.post('/createplace', function(request, response) {
         } else {
           response.redirect('/login'); // Redirect to the login page if not logged in
         }
-      });
+});
 
 app.post('/createplace', function(request, response) {
     if (request.session.loggedin) {
@@ -373,17 +407,32 @@ app.post('/createplace', function(request, response) {
         } else {
           response.redirect('/login'); // Redirect to the login page if not logged in
         }
-      });
+});
 
-      app.post('/deleteplace', function(request, response) {
-        if (request.session.loggedin) {
-          const userId = request.session.userId;
-          const place = request.body.place;
-          console.log("delete place entered");
-          console.log(userId, place);
-    
-          // Check if the place already exists in the database
-          db.query('SELECT * FROM Locations WHERE owner_id = ? AND place = ?', [userId, place], (err, results) => {
+app.post('/deleteplace', function(request, response) {
+  if (request.session.loggedin) {
+    const userId = request.session.userId;
+    const place = request.body.place;
+    console.log("delete place entered");
+    console.log(userId, place);
+
+    // Check if the place already exists in the database
+    db.query('SELECT * FROM Locations WHERE owner_id = ? AND place = ?', [userId, place], (err, results) => {
+      if (err) {
+        console.log('Error executing query:', err);
+        message = "Error retrieving weather data";
+        let finalMessage = `
+        <html>
+            <body style="background-color: rgb(162, 205, 248);">
+                <h1 style="text-align: center; color: rgb(50, 112, 192); font-family: system-ui; font-size: 40px;">${message}</h1>
+            </body>
+        </html>
+        `;
+        response.status(500).send(finalMessage);
+      } else {
+        if (results.length > 0) {
+          // Place exists in the database, delete it
+          db.query('DELETE FROM Locations WHERE owner_id = ? AND place = ?', [userId, place], (err, results) => {
             if (err) {
               console.log('Error executing query:', err);
               message = "Error retrieving weather data";
@@ -395,43 +444,28 @@ app.post('/createplace', function(request, response) {
               </html>
               `;
               response.status(500).send(finalMessage);
-            } else {
-              if (results.length > 0) {
-                // Place exists in the database, delete it
-                db.query('DELETE FROM Locations WHERE owner_id = ? AND place = ?', [userId, place], (err, results) => {
-                  if (err) {
-                    console.log('Error executing query:', err);
-                    message = "Error retrieving weather data";
-                    let finalMessage = `
-                    <html>
-                        <body style="background-color: rgb(162, 205, 248);">
-                            <h1 style="text-align: center; color: rgb(50, 112, 192); font-family: system-ui; font-size: 40px;">${message}</h1>
-                        </body>
-                    </html>
-                    `;
-                    response.status(500).send(finalMessage);
-                    } else {
-                    response.redirect('/home');
-                  }
-                });
               } else {
-                // Place does not exist in the database
-                message = "Place not found in the database";
-                let finalMessage = `
-                <html>
-                    <body style="background-color: rgb(162, 205, 248);">
-                        <h1 style="text-align: center; color: rgb(50, 112, 192); font-family: system-ui; font-size: 40px;">${message}</h1>
-                    </body>
-                </html>
-                `;
-                response.status(404).send(finalMessage);
-              }
+              response.redirect('/home');
             }
           });
         } else {
-          response.redirect('/login'); // Redirect to the login page if not logged in
+          // Place does not exist in the database
+          message = "Place not found in the database";
+          let finalMessage = `
+          <html>
+              <body style="background-color: rgb(162, 205, 248);">
+                  <h1 style="text-align: center; color: rgb(50, 112, 192); font-family: system-ui; font-size: 40px;">${message}</h1>
+              </body>
+          </html>
+          `;
+          response.status(404).send(finalMessage);
         }
-      });
+      }
+    });
+  } else {
+    response.redirect('/login'); // Redirect to the login page if not logged in
+  }
+});
 
 // http://localhost:3000/home
 app.get('/home', function(request, response) {
@@ -533,6 +567,6 @@ app.get('/home', function(request, response) {
         // Not logged in
         response.redirect('/login');
     }
-  });
+});
 
 app.listen(3000);
