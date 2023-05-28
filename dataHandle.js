@@ -14,6 +14,7 @@ const db = mysql.createConnection({
   user: process.env.MYSQLUSER,
   password: process.env.MYSQLPASSWORD,
   database: process.env.MYSQLDATABASE,
+  connectTimeout: 20000, 
 });
 
 
@@ -576,4 +577,4 @@ app.get('/home', function(request, response) {
     }
 });
 
-app.listen(3000);
+app.listen(3306);
