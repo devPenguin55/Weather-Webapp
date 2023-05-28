@@ -44,7 +44,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '')));
 
+console.log("express app created")
 
+// Create routes
 app.get('/login', function(request, response) {
 	// Render login template
 	response.sendFile(path.join(__dirname + '/login.html'));
