@@ -22,7 +22,7 @@ console.log("db connection created")
 // Connect 
 db.connect((err) => {
     if (err) {
-        console.log('Error connecting to database');
+        console.log('Error connecting to database2');
         throw err;
     }
     console.log('Connected to database');
