@@ -8,12 +8,13 @@ require('dotenv').config();
 const APIKEY = 'cb77b17e1c5b411397f185427232505';
 
 // Create connection
-console.log(process.env.MYSQLHOST,  process.env.MYSQLUSER, process.env.MYSQLPASSWORD,  process.env.MYSQLDATABASE)
+console.log(process.env.MYSQLHOST,  process.env.MYSQLUSER, process.env.MYSQLPASSWORD,  process.env.MYSQLDATABASE, process.env.MYSQLPORT)
 const db = mysql.createConnection({
   host: process.env.MYSQLHOST,
   user: process.env.MYSQLUSER,
   password: process.env.MYSQLPASSWORD,
   database: process.env.MYSQLDATABASE,
+  port: process.env.MYSQLPORT,
   connectTimeout: 60000, 
 });
 
@@ -583,4 +584,4 @@ app.get('/home', function(request, response) {
     }
 });
 
-app.listen(3306);
+app.listen(process.env.MYSQLPORT);
