@@ -4,15 +4,19 @@ const session = require('express-session');
 const path = require('path');
 const bodyParser = require('body-parser');
 const { connect } = require('http2');
+require('dotenv').config();
 const APIKEY = 'cb77b17e1c5b411397f185427232505';
 
 // Create connection
+console.log(process.env.MYSQLHOST,  process.env.MYSQLUSER, process.env.MYSQLPASSWORD,  process.env.MYSQLDATABASE)
 const db = mysql.createConnection({
-    host: '${{weather.MYSQLHOST}}',
-    user: '${{weather.MYSQLUSER}}',
-    password: '${{weather.MYSQLPASSWORD}}',
-    database: '${{weather.MYSQLDATABASE}}',
+  host: process.env.MYSQLHOST,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE,
 });
+
+
 
 // Connect 
 db.connect((err) => {
