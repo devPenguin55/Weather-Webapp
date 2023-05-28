@@ -28,6 +28,10 @@ db.connect((err) => {
     console.log('Connected to database');
 });
 
+console.log("nodejs app connected to mysql databse")
+
+// Create app
+
 const app = express();
 
 app.use(session({
