@@ -4,6 +4,7 @@ const session = require('express-session');
 const path = require('path');
 const bodyParser = require('body-parser');
 const { connect } = require('http2');
+require('isomorphic-fetch');
 require('dotenv').config();
 const APIKEY = 'cb77b17e1c5b411397f185427232505';
 
@@ -486,7 +487,6 @@ app.get('/home', function(request, response) {
     // If the user is logged in
     if (request.session.loggedin) {
         // Output username
-        const welcomeMessage = 'Welcome back, ' + request.session.username + '!';
         const userId = request.session.userId;
         console.log('User ID:', userId);
         db.query('SELECT * FROM Users INNER JOIN Locations ON Locations.owner_id = Users.id WHERE Users.id = ?', [userId], (err, results) => {
