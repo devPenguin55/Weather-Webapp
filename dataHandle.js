@@ -320,109 +320,6 @@ app.post('/createplace', function(request, response) {
         }
 });
 
-app.post('/createplace', function(request, response) {
-    if (request.session.loggedin) {
-        const userId = request.session.userId;
-        const place = request.body.place;
-        console.log("create place entered")
-        console.log(userId, place)
-        function capitalizeWords(str) {
-            // Split the string into an array of words
-            let words = str.split(' ');
-
-            // Capitalize the first letter of each word
-            let capitalizedWords = words.map(word => {
-              let firstLetter = word.charAt(0).toUpperCase();
-              let restOfWord = word.slice(1).toLowerCase();
-              return firstLetter + restOfWord;
-            });
-
-            // Join the capitalized words back into a single string
-            let result = capitalizedWords.join(' ');
-
-            return result;
-          }
-        
-        // Check if the place already exists in the database
-        db.query('SELECT * FROM Locations WHERE owner_id = ? AND place = ?', [userId, place], (err, results) => {
-            if (err) {
-              console.log('Error executing query:', err);
-              message = "Error retrieving weather data";
-              let finalMessage = `
-              <html>
-                  <body style="background-color: rgb(162, 205, 248);">
-                      <h1 style="text-align: center; color: rgb(50, 112, 192); font-family: system-ui; font-size: 40px;">${message}</h1>
-                  </body>
-              </html>
-              `;
-              response.status(500).send(finalMessage);
-            } else {
-              if (results.length > 0) {
-                // Place already exists in the database
-                message = "Place already exists";
-                let finalMessage = `
-                <html>
-                    <body style="background-color: rgb(162, 205, 248);">
-                        <h1 style="text-align: center; color: rgb(50, 112, 192); font-family: system-ui; font-size: 40px;">${message}</h1>
-                    </body>
-                </html>
-                `;
-                response.status(409).send(finalMessage);
-              } else {
-                // Make a request to the weather API with the entered place
-                fetch(`https://api.weatherapi.com/v1/current.json?key=${APIKEY}&q=${place}`)
-                  .then(apiResponse => apiResponse.json())
-                  .then(data => {
-                    // Check if the place data is available in the API response
-                    if (data.location) {
-                      // Place data is available, proceed with inserting into the database
-                      db.query('INSERT INTO Locations (owner_id, place) VALUES (?, ?);', [userId, place], (err, results) => {
-                        if (err) {
-                          console.log('Error executing query:', err);
-                          message = "Error retrieving weather data";
-                          let finalMessage = `
-                          <html>
-                              <body style="background-color: rgb(162, 205, 248);">
-                                  <h1 style="text-align: center; color: rgb(50, 112, 192); font-family: system-ui; font-size: 40px;">${message}</h1>
-                              </body>
-                          </html>
-                          `;
-                          response.status(500).send(finalMessage);} else {
-                          response.redirect('/home');
-                        }
-                      });
-                    } else {
-                      // Place data is not available in the API response
-                      message = "Place not found in the API";
-                      let finalMessage = `
-                      <html>
-                          <body style="background-color: rgb(162, 205, 248);">
-                              <h1 style="text-align: center; color: rgb(50, 112, 192); font-family: system-ui; font-size: 40px;">${message}</h1>
-                          </body>
-                      </html>
-                      `;
-                      response.status(404).send(finalMessage);
-                    }
-                  })
-                  .catch(error => {
-                    console.log('Error:', error);
-                    message = "Error accessing the weather API";
-                    let finalMessage = `
-                    <html>
-                        <body style="background-color: rgb(162, 205, 248);">
-                            <h1 style="text-align: center; color: rgb(50, 112, 192); font-family: system-ui; font-size: 40px;">${message}</h1>
-                        </body>
-                    </html>
-                    `;
-                    response.status(500).send(finalMessage);
-                  });
-              }
-            }
-          });
-        } else {
-          response.redirect('/login'); // Redirect to the login page if not logged in
-        }
-});
 
 app.post('/deleteplace', function(request, response) {
   if (request.session.loggedin) {
@@ -482,10 +379,26 @@ app.post('/deleteplace', function(request, response) {
   }
 });
 
+
 // http://localhost:3000/home
 app.get('/home', function(request, response) {
     // If the user is logged in
     if (request.session.loggedin) {
+        const clientIP = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
+        console.log('Client IP:', clientIP);
+        const geoip = require('geoip-lite');
+        const ip = clientIP; // Replace with the actual IP address
+        const geo = geoip.lookup(ip);
+
+        if (geo) {
+          console.log('Country:', geo.country);
+          console.log('Region:', geo.region);
+          console.log('City:', geo.city);
+          console.log('Latitude:', geo.ll[0]);
+          console.log('Longitude:', geo.ll[1]);
+        } else {
+          console.log('Unable to determine geolocation for the given IP address.');
+        }
         // Output username
         const userId = request.session.userId;
         console.log('User ID:', userId);
