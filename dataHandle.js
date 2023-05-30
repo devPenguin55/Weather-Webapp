@@ -384,7 +384,16 @@ app.post('/deleteplace', function(request, response) {
 app.get('/home', function(request, response) {
     // If the user is logged in
     if (request.session.loggedin) {
-        const clientIP = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
+        const forwardedIP = request.headers['x-forwarded-for'];
+        let clientIP;
+
+        if (forwardedIP) {
+          const ipList = forwardedIP.split(',');
+          clientIP = ipList[0].trim();
+        } else {
+          clientIP = request.socket.remoteAddress;
+        }
+
         console.log('Client IP:', clientIP);
         const geoip = require('geoip-lite');
         const ip = clientIP; // Replace with the actual IP address
