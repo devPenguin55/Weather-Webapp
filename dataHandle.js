@@ -395,19 +395,25 @@ app.get('/home', function(request, response) {
         }
 
         console.log('Client IP:', clientIP);
-        const geoip = require('geoip-lite');
-        const ip = clientIP; // Replace with the actual IP address
-        const geo = geoip.lookup(ip);
+        // const geoip = require('geoip-lite');
+        // const ip = clientIP; // Replace with the actual IP address
+        // const geo = geoip.lookup(ip);
 
-        if (geo) {
-          console.log('Country:', geo.country);
-          console.log('Region:', geo.region);
-          console.log('City:', geo.city);
-          console.log('Latitude:', geo.ll[0]);
-          console.log('Longitude:', geo.ll[1]);
-        } else {
-          console.log('Unable to determine geolocation for the given IP address.');
-        }
+        // if (geo) {
+        //   console.log('Country:', geo.country);
+        //   console.log('Region:', geo.region);
+        //   console.log('City:', geo.city);
+        //   console.log('Latitude:', geo.ll[0]);
+        //   console.log('Longitude:', geo.ll[1]);
+        // } else {
+        //   console.log('Unable to determine geolocation for the given IP address.');
+        // }
+
+        const satelize = require('satelize');
+        satelize.satelize({ip: clientIP}, function(err, data) {
+          console.log(data)
+        });
+
         // Output username
         const userId = request.session.userId;
         console.log('User ID:', userId);
